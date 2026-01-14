@@ -13,11 +13,18 @@ export async function fetchProducts(): Promise<Product[]> {
 }
 
 export async function fetchProductById(id: string): Promise<Product> {
-  const res = await fetch(`${BASE_URL}/products/${id}`);
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch product");
+  if (!id || isNaN(Number(id))) {
+    throw new Error("Invalid product id");
   }
 
-  return res.json();
+  const res = await fetch(
+    `https://fakestoreapi.com/products/${id}`,
+    { cache: "no-store" }
+  );
+
+  if (!res.ok) {
+    throw new Error("Product not found");
+  }
+
+  return res.json(); 
 }

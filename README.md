@@ -10,12 +10,6 @@ The project demonstrates clean component architecture, client–server separatio
 
 ---
 
-## 🚀 Live Demo
-(Optional)  
-🔗 https://your-vercel-url.vercel.app
-
----
-
 ## 🛠 Tech Stack
 
 - **Next.js (App Router)** – Server & Client Components

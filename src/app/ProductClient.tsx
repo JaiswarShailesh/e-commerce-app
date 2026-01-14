@@ -5,11 +5,12 @@ import { Product } from "@/types/product";
 import ProductCard from "@/components/ProductCard";
 import { useFavorites } from "@/hooks/useFavorites";
 
-interface Props {
-  products: Product[];
-}
+import SearchBar from "@/components/SearchBar";
+import CategoryFilter from "@/components/CategoryFilter";
+import FavoritesToggle from "@/components/FavoritesToggle";
+import SortSelect from "@/components/SortSelect";
 
-export default function ProductClient({ products }: Props) {
+export default function ProductClient({ products }: { products: Product[] }) {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [showFavorites, setShowFavorites] = useState(false);
@@ -25,13 +26,15 @@ export default function ProductClient({ products }: Props) {
         .toLowerCase()
         .includes(search.toLowerCase());
 
-      const matchesCategory = category === "all" || p.category === category;
+      const matchesCategory =
+        category === "all" || p.category === category;
 
-      const matchesFavorites = !showFavorites || favorites.includes(p.id);
+      const matchesFavorites =
+        !showFavorites || favorites.includes(p.id);
 
       return matchesSearch && matchesCategory && matchesFavorites;
     })
-    .slice() // 👈 prevent mutation
+    .slice()
     .sort((a, b) => {
       if (sort === "asc") return a.price - b.price;
       if (sort === "desc") return b.price - a.price;
@@ -40,47 +43,23 @@ export default function ProductClient({ products }: Props) {
 
   return (
     <>
+      {/* Filters */}
       <div className="bg-white dark:bg-neutral-900 border rounded-xl p-4 mb-6 shadow-sm">
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Search */}
-          <input
-            className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-black/10 outline-none"
-            placeholder="Search products..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+          <SearchBar value={search} onChange={setSearch} />
+
+          <CategoryFilter
+            value={category}
+            categories={categories}
+            onChange={setCategory}
           />
 
-          {/* Category */}
-          <select
-            className="border rounded-lg px-3 py-2"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="all">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat}>{cat}</option>
-            ))}
-          </select>
+          <FavoritesToggle
+            enabled={showFavorites}
+            onToggle={() => setShowFavorites((prev) => !prev)}
+          />
 
-          {/* Favorites */}
-          <button
-            onClick={() => setShowFavorites((prev) => !prev)}
-            className="border rounded-lg px-3 py-2 hover:bg-gray-50 dark:hover:bg-neutral-800"
-          >
-            {showFavorites ? "Show All" : "Show Favorites"}
-          </button>
-
-          {/* Sort */}
-          <select
-            className="border rounded-lg px-3 py-2"
-            value={sort}
-            onChange={(e) => setSort(e.target.value as any)}
-            aria-label="Sort products by price"
-          >
-            <option value="none">Sort by price</option>
-            <option value="asc">Low to High</option>
-            <option value="desc">High to Low</option>
-          </select>
+          <SortSelect value={sort} onChange={setSort} />
         </div>
       </div>
 

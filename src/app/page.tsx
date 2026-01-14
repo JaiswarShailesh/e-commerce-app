@@ -1,3 +1,6 @@
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 import { fetchProducts } from "@/lib/api";
 import ProductClient from "./ProductClient";
 import ProductSkeletonGrid from "@/components/ProductSkeletonGrid";
@@ -22,5 +25,3 @@ export default function HomePage() {
     </main>
   );
 }
-
-export const dynamic = "force-dynamic";
